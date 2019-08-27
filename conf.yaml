@@ -1,0 +1,15 @@
+redis:
+  url: redis://localhost:6379/1
+
+mongo:
+  url: mongodb://localhost:27017/crypto
+
+gin:
+  mode: debug
+
+user:
+  port: 5003
+
+jwt:
+  secret: "12fadzc132f423dsc21424123412343124fdsacv321"
+

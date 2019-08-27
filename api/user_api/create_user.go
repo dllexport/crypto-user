@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"../../db"
-	"../../utils"
+	"crypto-user/db"
+	"crypto-user/utils"
+
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2/bson"
 )

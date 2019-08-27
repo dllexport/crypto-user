@@ -1,7 +1,7 @@
 package db
 
 import (
-	"../utils"
+	"crypto-user/utils"
 
 	mgo "gopkg.in/mgo.v2"
 )

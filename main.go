@@ -3,8 +3,9 @@ package main
 import (
 	"runtime"
 
-	"./api/user_api"
-	"./utils"
+	"crypto-user/api/user_api"
+	"crypto-user/utils"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

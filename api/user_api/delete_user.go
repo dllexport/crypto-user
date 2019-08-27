@@ -3,7 +3,8 @@ package user_api
 import (
 	"net/http"
 
-	"../../db"
+	"crypto-user/db"
+
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gin-gonic/gin"

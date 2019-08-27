@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"../../utils"
+	"crypto-user/utils"
 
-	"../../db"
+	"crypto-user/db"
+
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/dgrijalva/jwt-go"
@@ -44,7 +45,7 @@ func LoginUserHandler(c *gin.Context) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"uid":      user.UID,
 		"username": user.Username,
-		"expire":   time.Now().Local().Add(time.Hour * time.Duration(1)),
+		"exp":      time.Now().Local().Add(time.Hour * time.Duration(1)).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
