@@ -1,6 +1,9 @@
 package user_api
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -20,6 +23,7 @@ func CreateUserHandler(c *gin.Context) {
 		return
 	}
 
+	// username唯一
 	count, err := db.FindCount(db.DB, db.CollectionUser, bson.M{"username": user_request.Username})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "db err", Payload: nil})
@@ -31,12 +35,17 @@ func CreateUserHandler(c *gin.Context) {
 		return
 	}
 
+	// add salt && sha256 password
+	salt := utils.GenRandomStr(time.Now().UnixNano(), 64)
+	h := sha256.New()
+	h.Write([]byte(user_request.Password + salt))
+	password := hex.EncodeToString(h.Sum(nil))
+	fmt.Printf("%s", password)
 	user := User{
 		UID:       utils.GenId(),
 		Username:  user_request.Username,
-		Password:  user_request.Password,
-		OkexKey:   user_request.OkexKey,
-		HuobiKey:  user_request.HuobiKey,
+		Password:  password,
+		Salt:      salt,
 		Status:    USER_STATUS_ACTIVE,
 		CreatedTS: time.Now(),
 	}

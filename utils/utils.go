@@ -148,17 +148,17 @@ func GenId() string {
 	now := time.Now()
 	layout := "20060102150405"
 	timeStr := now.Format(layout)
-	return timeStr + genRandomStr(now.UnixNano(), 2)
+	return timeStr + GenRandomStr(now.UnixNano(), 2)
 }
 
 func GenClientOrderId(ex string) string {
 	now := time.Now()
 	layout := "20060102150405"
 	timeStr := now.Format(layout)
-	return ex + timeStr + genRandomStr(now.UnixNano(), 2)
+	return ex + timeStr + GenRandomStr(now.UnixNano(), 2)
 }
 
-func genRandomStr(seed int64, num int) string {
+func GenRandomStr(seed int64, num int) string {
 	var letterRunes = []rune("0123456789abcdefghijklmnopqrstuvwxyz")
 	b := make([]rune, num)
 	rand.Seed(seed)
