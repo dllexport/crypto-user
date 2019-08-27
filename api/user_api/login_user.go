@@ -38,6 +38,7 @@ func LoginUserHandler(c *gin.Context) {
 	}
 
 	secretKey, _ := utils.GetConfig().Get("jwt.secret")
+	expireTime, _ := utils.GetConfig().GetInt("jwt.expire_time")
 
 	// sign jwt and reply
 	// Create a new token object, specifying signing method and the claims
@@ -45,7 +46,7 @@ func LoginUserHandler(c *gin.Context) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"uid":      user.UID,
 		"username": user.Username,
-		"exp":      time.Now().Local().Add(time.Hour * time.Duration(1)).Unix(),
+		"exp":      time.Now().Local().Add(time.Hour * time.Duration(expireTime)).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
