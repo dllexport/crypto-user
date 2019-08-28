@@ -44,9 +44,10 @@ func LoginUserHandler(c *gin.Context) {
 	// Create a new token object, specifying signing method and the claims
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"uid":      user.UID,
-		"username": user.Username,
-		"exp":      time.Now().Local().Add(time.Hour * time.Duration(expireTime)).Unix(),
+		"uid":            user.UID,
+		"username":       user.Username,
+		"allow_strategy": user.AllowStrategy,
+		"exp":            time.Now().Local().Add(time.Hour * time.Duration(expireTime)).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
