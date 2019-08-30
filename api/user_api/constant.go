@@ -19,12 +19,14 @@ type HuobiKeyDetail struct {
 }
 
 type User struct {
-	UID           string        `bson:"_id" json:"uid"`
+	UID string `bson:"_id" json:"uid"`
+	//Tel           string        `bson:"tel" json:"tel"`
 	Username      string        `bson:"username" json:"username"`
 	Password      string        `bson:"password" json:"password"` // hex
 	Salt          string        `bson:"salt" json:"salt"`
 	OkexKey       OkexKeyDetail `bson:"okex_key" json:"okex_key"`
 	HuobiKey      OkexKeyDetail `bson:"huobi_key" json:"huobi_key"`
+	PushURL       string        `bson:"push_url" json:"push_url"`
 	Status        string        `bson:"status" json:"status"`
 	CreatedTS     time.Time     `bson:"created_ts" json:"created_ts"`
 	AllowStrategy []string      `bson:"allow_strategy" json:"allow_strategy"`

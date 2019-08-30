@@ -167,3 +167,13 @@ func GenRandomStr(seed int64, num int) string {
 	}
 	return string(b)
 }
+
+func GenRandomNumStr(seed int64, num int) string {
+	var letterRunes = []rune("0123456789")
+	b := make([]rune, num)
+	rand.Seed(seed)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}

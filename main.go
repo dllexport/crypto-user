@@ -24,6 +24,8 @@ func main() {
 	userGroup.POST("/delete", user_api.DeleteUserHandler)
 	userGroup.POST("/setkey", user_api.SetKeyUserHandler)
 	userGroup.POST("/login", user_api.LoginUserHandler)
+	userGroup.POST("/sms", user_api.SMSHandler)
+	userGroup.POST("/setpush", user_api.SetPushURLUserHandler)
 
 	port, _ := utils.GetConfig().Get("user.port")
 	mode, _ := utils.GetConfig().Get("gin.mode")
