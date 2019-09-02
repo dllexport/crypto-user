@@ -8,8 +8,8 @@ import (
 	"crypto-user/db"
 	"crypto-user/utils"
 
-	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
 	"github.com/gin-gonic/gin"
+	"github.com/qinxin0720/QcloudSms-go/QcloudSms"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -40,45 +40,46 @@ func SMSHandler(c *gin.Context) {
 	redis := utils.RedisUtils{}
 	redis.Connect()
 	defer redis.Close()
-	access_id, _ := utils.GetConfig().Get("sms.access_id")
-	access_secret, _ := utils.GetConfig().Get("sms.access_secret")
+	app_id, _ := utils.GetConfig().GetInt("sms.app_id")
+	app_key, _ := utils.GetConfig().Get("sms.app_key")
+
+	var templID = 410376
+	var params = []string{}
+	qcloudsms, err := QcloudSms.NewQcloudSms(int(app_id), app_key)
+	if err != nil {
+		panic(err)
+	}
 
 	// add salt && sha256 password
 	code := utils.GenRandomNumStr(time.Now().UnixNano(), 4)
+	params = append(params, code)
 
-	client, err := dysmsapi.NewClientWithAccessKey("cn-hangzhou", access_id, access_secret)
+	sendCh := make(chan error, 1)
 
-	request := dysmsapi.CreateSendSmsRequest()
-	request.Scheme = "https"
+	qcloudsms.SmsSingleSender.SendWithParam(86, user_request.Tel, templID, params, "", "", "", func(err error, resp *http.Response, resData string) {
+		if err != nil {
+			fmt.Println("err: ", err)
+		} else {
+			fmt.Println("response data: ", utils.Unicode2utf8(resData))
+		}
+		sendCh <- err
+	})
 
-	request.PhoneNumbers = user_request.Tel
-	request.SignName = "共识区块链科技"
-	request.TemplateCode = "SMS_173155142"
-	codeSend := fmt.Sprintf("{\"code\":\"%s\"}", code)
-	request.TemplateParam = codeSend
-	fmt.Printf("%v\n", request)
-	response, err := client.SendSms(request)
-	if err != nil {
-		fmt.Print(err.Error())
-		c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: 0, ErrorDescription: "server send sms error", Payload: nil})
-		return
+	select {
+	case err := <-sendCh:
+		if err != nil {
+			fmt.Print(err.Error())
+			c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: 0, ErrorDescription: "server send sms error", Payload: nil})
+			return
+		}
+		c.JSON(http.StatusOK, JSONReply{
+			ErrorCode:        0,
+			ErrorDescription: "success",
+			Payload: struct {
+				Code string `json:"code"`
+			}{
+				code,
+			}})
 	}
-
-	fmt.Printf("response is %#v\n", response)
-	if response.Code != "OK" {
-		c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: 0, ErrorDescription: "fail to send sms", Payload: nil})
-		return
-	}
-
-	redis.SetEx(user_request.Tel, SMSExpireTime, code)
-
-	c.JSON(http.StatusOK, JSONReply{
-		ErrorCode:        0,
-		ErrorDescription: "success",
-		Payload: struct {
-			Code string `json:"code"`
-		}{
-			code,
-		}})
 
 }
