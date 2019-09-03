@@ -17,19 +17,19 @@ type DeleteUserRequest struct {
 }
 
 type LoginUserRequest struct {
-	Username string `json:"username"`
+	Tel      string `json:"tel"`
 	Password string `json:"password"`
 }
 
 type SetKeyUserRequest struct {
-	Username string        `json:"username"`
+	Tel      string        `json:"tel"`
 	Password string        `json:"password"`
 	OkexKey  OkexKeyDetail `bson:"okex_key" json:"okex_key"`
 	HuobiKey OkexKeyDetail `bson:"huobi_key" json:"huobi_key"`
 }
 
 type SetPushURLUserRequest struct {
-	Username string `json:"username"`
+	Tel      string `json:"tel"`
 	Password string `json:"password"`
 	PushURL  string `json:"push_url"`
 }

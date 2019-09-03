@@ -21,7 +21,7 @@ func SetKeyUserHandler(c *gin.Context) {
 	}
 
 	var user User
-	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"username": user_request.Username}, nil, &user); err != nil {
+	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"tel": user_request.Tel}, nil, &user); err != nil {
 		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
 		return
 	}
@@ -35,7 +35,7 @@ func SetKeyUserHandler(c *gin.Context) {
 	user.OkexKey = user_request.OkexKey
 	user.HuobiKey = user_request.HuobiKey
 
-	if err := db.Update(db.DB, db.CollectionUser, bson.M{"username": user_request.Username}, &user); err == nil {
+	if err := db.Update(db.DB, db.CollectionUser, bson.M{"tel": user_request.Tel}, &user); err == nil {
 		c.JSON(http.StatusOK, JSONReply{ErrorCode: 0, ErrorDescription: "success", Payload: nil})
 	} else {
 		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "update job status err", Payload: nil})
