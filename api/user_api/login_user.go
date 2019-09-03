@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"crypto-user/api"
 	"crypto-user/utils"
 
 	"crypto-user/db"
@@ -21,19 +22,19 @@ import (
 func LoginUserHandler(c *gin.Context) {
 	var user_request LoginUserRequest
 	if err := c.ShouldBindJSON(&user_request); err != nil {
-		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "parms err", Payload: nil})
+		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "parms err", Payload: nil})
 		return
 	}
 
 	var user User
 	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"username": user_request.Username}, nil, &user); err != nil {
-		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
+		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
 		return
 	}
 
 	// if password error
 	if !checkPassword(user_request.Password, user.Password, user.Salt) {
-		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "user password incorrect", Payload: nil})
+		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user password incorrect", Payload: nil})
 		return
 	}
 
@@ -54,11 +55,11 @@ func LoginUserHandler(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println(tokenString, err)
-		c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: -1, ErrorDescription: "jwt sign err", Payload: nil})
+		c.JSON(http.StatusInternalServerError, api.JSONReply{ErrorCode: -1, ErrorDescription: "jwt sign err", Payload: nil})
 		return
 	}
 
-	c.JSON(http.StatusOK, JSONReply{ErrorCode: 0, ErrorDescription: "success", Payload: struct {
+	c.JSON(http.StatusOK, api.JSONReply{ErrorCode: 0, ErrorDescription: "success", Payload: struct {
 		Token string `json:"token"`
 	}{
 		Token: tokenString,

@@ -2,12 +2,6 @@ package user_api
 
 import "time"
 
-type JSONReply struct {
-	ErrorCode        int         `json:"error_code"`
-	ErrorDescription string      `json:"error_desc"`
-	Payload          interface{} `json:"payload"`
-}
-
 type OkexKeyDetail struct {
 	APIKEY     string `bson:"api_key" json:"api_key"`
 	SecretKey  string `bson:"secret_key" json:"secret_key"`
