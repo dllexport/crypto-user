@@ -3,9 +3,8 @@ package user_api
 // Create User
 // we get uid from the jwt
 type CreateUserRequest struct {
-	//Tel      string `bson:"tel" json:"tel" binding:"required"`
-	//Code     string `json:"code" binding:"required"`
-	Username string `bson:"username" json:"username" binding:"required"`
+	Tel      string `bson:"tel" json:"tel" binding:"required"`
+	Code     string `json:"code" binding:"required"`
 	Password string `bson:"password" json:"password" binding:"required"`
 }
 

@@ -19,9 +19,8 @@ type HuobiKeyDetail struct {
 }
 
 type User struct {
-	UID string `bson:"_id" json:"uid"`
-	//Tel           string        `bson:"tel" json:"tel"`
-	Username      string        `bson:"username" json:"username"`
+	UID           string        `bson:"_id" json:"uid"`
+	Tel           string        `bson:"tel" json:"tel"`
 	Password      string        `bson:"password" json:"password"` // hex
 	Salt          string        `bson:"salt" json:"salt"`
 	OkexKey       OkexKeyDetail `bson:"okex_key" json:"okex_key"`

@@ -45,7 +45,6 @@ func LoginUserHandler(c *gin.Context) {
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"uid":            user.UID,
-		"username":       user.Username,
 		"allow_strategy": user.AllowStrategy,
 		"exp":            time.Now().Local().Add(time.Hour * time.Duration(expireTime)).Unix(),
 	})

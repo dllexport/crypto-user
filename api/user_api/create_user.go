@@ -25,7 +25,7 @@ func CreateUserHandler(c *gin.Context) {
 	}
 
 	// username唯一
-	count, err := db.FindCount(db.DB, db.CollectionUser, bson.M{"username": user_request.Username})
+	count, err := db.FindCount(db.DB, db.CollectionUser, bson.M{"tel": user_request.Tel})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "db err", Payload: nil})
 		return
@@ -34,24 +34,24 @@ func CreateUserHandler(c *gin.Context) {
 	if count != 0 {
 		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "user already exist", Payload: nil})
 		return
-	}  
+	}
 
-	// redis := utils.RedisUtils{}
-	// redis.Connect()
-	// defer redis.Close()
+	redis := utils.RedisUtils{}
+	redis.Connect()
+	defer redis.Close()
 
-	// code, redisErr := redis.Get(user_request.Tel)
-	// if redisErr != nil {
-	// 	c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: -1, ErrorDescription: "code not found", Payload: nil})
-	// 	return
-	// }
+	code, redisErr := redis.Get(user_request.Tel)
+	if redisErr != nil {
+		c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: -1, ErrorDescription: "code not found", Payload: nil})
+		return
+	}
 
-	// if code != user_request.Code {
-	// 	c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "code err", Payload: nil})
-	// 	return
-	// }
+	if code != user_request.Code {
+		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "code err", Payload: nil})
+		return
+	}
 
-	//redis.Del(user_request.Tel)
+	redis.Del(user_request.Tel)
 
 	// add salt && sha256 password
 	salt := utils.GenRandomStr(time.Now().UnixNano(), 64)
@@ -61,9 +61,8 @@ func CreateUserHandler(c *gin.Context) {
 
 	fmt.Printf("%s", password)
 	user := User{
-		UID: utils.GenId(),
-		//Tel:       user_request.Tel,
-		Username:  user_request.Username,
+		UID:       utils.GenId(),
+		Tel:       user_request.Tel,
 		Password:  password,
 		Salt:      salt,
 		Status:    USER_STATUS_ACTIVE,

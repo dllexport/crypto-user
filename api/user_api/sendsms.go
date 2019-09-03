@@ -72,6 +72,9 @@ func SMSHandler(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: 0, ErrorDescription: "server send sms error", Payload: nil})
 			return
 		}
+
+		redis.SetEx(user_request.Tel, 60, code)
+
 		c.JSON(http.StatusOK, JSONReply{
 			ErrorCode:        0,
 			ErrorDescription: "success",
