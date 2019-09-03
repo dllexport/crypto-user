@@ -17,6 +17,6 @@ type LoginUserRequest struct {
 }
 
 type SetKeyUserRequest struct {
-	OkexKey  OkexKeyDetail `bson:"okex_key" json:"okex_key"`
-	HuobiKey OkexKeyDetail `bson:"huobi_key" json:"huobi_key"`
+	OkexKey  OkexKeyDetail  `bson:"okex_key" json:"okex_key"`
+	HuobiKey HuobiKeyDetail `bson:"huobi_key" json:"huobi_key"`
 }

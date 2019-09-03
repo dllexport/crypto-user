@@ -15,7 +15,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	r := gin.New()
 	config := cors.DefaultConfig()
-	config.AllowHeaders = []string{"x-url-path", "content-type"}
+	config.AllowHeaders = []string{"x-url-path", "content-type", "Authorization"}
 	config.AllowMethods = []string{"POST", "OPTIONS", "GET"}
 	config.AllowAllOrigins = true
 	r.Use(cors.New(config))
