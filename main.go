@@ -3,6 +3,7 @@ package main
 import (
 	"runtime"
 
+	"crypto-user/api/middleware"
 	"crypto-user/api/user_api"
 	"crypto-user/utils"
 
@@ -22,9 +23,11 @@ func main() {
 	userGroup := r.Group("/api/user")
 	userGroup.POST("/create", user_api.CreateUserHandler)
 	userGroup.POST("/delete", user_api.DeleteUserHandler)
-	userGroup.POST("/setkey", user_api.SetKeyUserHandler)
 	userGroup.POST("/login", user_api.LoginUserHandler)
-
+	userGroup.Use(middleware.JwtMiddleware().MiddlewareFunc())
+	{
+		userGroup.POST("/setkey", user_api.SetKeyUserHandler)
+	}
 	port, _ := utils.GetConfig().Get("user.port")
 	mode, _ := utils.GetConfig().Get("gin.mode")
 	if mode == "" {
