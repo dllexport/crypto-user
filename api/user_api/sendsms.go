@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"crypto-user/api"
 	"crypto-user/db"
 	"crypto-user/utils"
 
@@ -21,19 +22,19 @@ const SMSExpireTime = 60
 func SMSHandler(c *gin.Context) {
 	var user_request SmsRequest
 	if err := c.ShouldBindJSON(&user_request); err != nil {
-		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "parms err", Payload: nil})
+		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "parms err", Payload: nil})
 		return
 	}
 
 	// username唯一
 	count, err := db.FindCount(db.DB, db.CollectionUser, bson.M{"tel": user_request.Tel})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "db err", Payload: nil})
+		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "db err", Payload: nil})
 		return
 	}
 
 	if count != 0 {
-		c.JSON(http.StatusBadRequest, JSONReply{ErrorCode: -1, ErrorDescription: "user already registered", Payload: nil})
+		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user already registered", Payload: nil})
 		return
 	}
 
@@ -69,13 +70,13 @@ func SMSHandler(c *gin.Context) {
 	case err := <-sendCh:
 		if err != nil {
 			fmt.Print(err.Error())
-			c.JSON(http.StatusInternalServerError, JSONReply{ErrorCode: 0, ErrorDescription: "server send sms error", Payload: nil})
+			c.JSON(http.StatusInternalServerError, api.JSONReply{ErrorCode: 0, ErrorDescription: "server send sms error", Payload: nil})
 			return
 		}
 
 		redis.SetEx(user_request.Tel, 60, code)
 
-		c.JSON(http.StatusOK, JSONReply{
+		c.JSON(http.StatusOK, api.JSONReply{
 			ErrorCode:        0,
 			ErrorDescription: "success",
 			Payload: struct {

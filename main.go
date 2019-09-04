@@ -3,6 +3,7 @@ package main
 import (
 	"runtime"
 
+	"crypto-user/api/middleware"
 	"crypto-user/api/user_api"
 	"crypto-user/utils"
 
@@ -26,7 +27,10 @@ func main() {
 	userGroup.POST("/login", user_api.LoginUserHandler)
 	userGroup.POST("/sms", user_api.SMSHandler)
 	userGroup.POST("/setpush", user_api.SetPushURLUserHandler)
-
+	userGroup.Use(middleware.JwtMiddleware().MiddlewareFunc())
+	{
+		userGroup.POST("/refresh", user_api.RefreshTokenHandler)
+	}
 	port, _ := utils.GetConfig().Get("user.port")
 	mode, _ := utils.GetConfig().Get("gin.mode")
 	if mode == "" {
