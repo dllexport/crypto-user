@@ -28,7 +28,7 @@ func main() {
 	{
 		userGroup.POST("/setkey", user_api.SetKeyUserHandler)
 	}
-	port, _ := utils.GetConfig().Get("user.port")
+	port, _ := utils.GetConfig().Get("api.port")
 	mode, _ := utils.GetConfig().Get("gin.mode")
 	if mode == "" {
 		mode = "debug"

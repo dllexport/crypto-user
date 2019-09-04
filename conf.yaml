@@ -10,7 +10,7 @@ mongo:
 gin:
   mode: debug
 
-user:
+api:
   port: 5005
 
 jwt:
