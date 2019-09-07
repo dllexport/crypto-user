@@ -30,8 +30,24 @@ func SetKeyUserHandler(c *gin.Context) {
 		return
 	}
 
-	user.OkexKey = user_request.OkexKey
-	user.HuobiKey = user_request.HuobiKey
+	if user_request.OkexKey.APIKEY != "" {
+		user.OkexKey.APIKEY = user_request.OkexKey.APIKEY
+	}
+	if user_request.OkexKey.SecretKey != "" {
+		user.OkexKey.SecretKey = user_request.OkexKey.SecretKey
+	}
+	if user_request.OkexKey.PassPhrase != "" {
+		user.OkexKey.PassPhrase = user_request.OkexKey.PassPhrase
+	}
+	if user_request.HuobiKey.APIKEY != "" {
+		user.HuobiKey.APIKEY = user_request.HuobiKey.APIKEY
+	}
+	if user_request.HuobiKey.SecretKey != "" {
+		user.HuobiKey.SecretKey = user_request.HuobiKey.SecretKey
+	}
+	if user_request.PushURL != "" {
+		user.PushURL = user_request.PushURL
+	}
 
 	if err := db.Update(db.DB, db.CollectionUser, bson.M{"username": claims["username"].(string)}, &user); err == nil {
 		c.JSON(http.StatusOK, api.JSONReply{ErrorCode: 0, ErrorDescription: "success", Payload: nil})

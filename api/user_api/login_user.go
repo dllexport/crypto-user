@@ -3,6 +3,7 @@ package user_api
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"crypto-user/api"
@@ -45,9 +46,12 @@ func LoginUserHandler(c *gin.Context) {
 	// Create a new token object, specifying signing method and the claims
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"uid":      user.UID,
-		"username": user.Username,
-		"exp":      time.Now().Local().Add(time.Hour * time.Duration(expireTime)).Unix(),
+		"uid":           user.UID,
+		"username":      user.Username,
+		"okex_api_set":  maskRight(user.OkexKey.APIKEY, len(user.OkexKey.APIKEY)/4),
+		"huobi_api_set": maskRight(user.HuobiKey.APIKEY, len(user.HuobiKey.APIKEY)/4),
+		"push_url_set":  maskRight(user.PushURL, len(user.PushURL)/4),
+		"exp":           time.Now().Local().Add(time.Hour * time.Duration(expireTime)).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
@@ -65,4 +69,19 @@ func LoginUserHandler(c *gin.Context) {
 		Token: tokenString,
 	}})
 
+}
+
+func genStar(len int) string {
+	return strings.Repeat("•", len)
+}
+
+func maskRight(s string, length int) string {
+	if length > 0 {
+		rs := []rune(s)
+		for i := len(rs) - 1; i >= length; i-- {
+			rs[i] = '•'
+		}
+		return string(rs)
+	}
+	return ""
 }
