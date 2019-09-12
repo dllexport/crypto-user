@@ -18,5 +18,5 @@ sms:
   access_secret: QUp7dLAiFrqEyvAVoWLLbRuB6dqKMr
 
 jwt:
-  secret: "12fadzc132f423dsc21424123412343124fdsacv321"
-  expire_time: 99999999
+  secret: 12fadzc132f423dsc21424123412343124fdsacv321
+  expire_time: 24
