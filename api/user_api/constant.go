@@ -19,7 +19,7 @@ type User struct {
 	Salt      string         `bson:"salt" json:"salt"`
 	OkexKey   OkexKeyDetail  `bson:"okex_key" json:"okex_key"`
 	HuobiKey  HuobiKeyDetail `bson:"huobi_key" json:"huobi_key"`
-	PushURL   string         `bson:"push_url" json:"push_url"`
+	PushUID   int64          `bson:"push_uid" json:"push_uid"`
 	Status    string         `bson:"status" json:"status"`
 	CreatedTS time.Time      `bson:"created_ts" json:"created_ts"`
 }
