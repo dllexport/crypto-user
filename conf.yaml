@@ -14,8 +14,8 @@ user:
   port: 5005
 
 sms:
-  access_id: LTAIMRl8piBK1Xso
-  access_secret: QUp7dLAiFrqEyvAVoWLLbRuB6dqKMr
+  app_id: 1400251392
+  app_key: 3b3b2c1312e6bda810bc077ba56a2f4a
 
 jwt:
   secret: 12fadzc132f423dsc21424123412343124fdsacv321
