@@ -22,10 +22,8 @@ type LoginUserRequest struct {
 }
 
 type SetKeyUserRequest struct {
-	Tel      string        `json:"tel"`
-	Password string        `json:"password"`
-	OkexKey  OkexKeyDetail `bson:"okex_key" json:"okex_key"`
-	HuobiKey OkexKeyDetail `bson:"huobi_key" json:"huobi_key"`
+	OkexKey  OkexKeyDetail  `bson:"okex_key" json:"okex_key"`
+	HuobiKey HuobiKeyDetail `bson:"huobi_key" json:"huobi_key"`
 }
 
 type SetPushURLUserRequest struct {

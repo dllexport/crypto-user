@@ -23,12 +23,12 @@ func main() {
 	userGroup := r.Group("/api/user")
 	userGroup.POST("/create", user_api.CreateUserHandler)
 	// userGroup.POST("/delete", user_api.DeleteUserHandler)
-	userGroup.POST("/setkey", user_api.SetKeyUserHandler)
 	userGroup.POST("/login", user_api.LoginUserHandler)
 	userGroup.POST("/sms", user_api.SMSHandler)
 	userGroup.POST("/setpush", user_api.SetPushURLUserHandler)
 	userGroup.Use(middleware.JwtMiddleware().MiddlewareFunc())
 	{
+		userGroup.POST("/setkey", user_api.SetKeyUserHandler)
 		userGroup.POST("/refresh", user_api.RefreshTokenHandler)
 	}
 	port, _ := utils.GetConfig().Get("user.port")

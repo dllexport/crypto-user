@@ -1,6 +1,7 @@
 package user_api
 
 import (
+	"fmt"
 	"net/http"
 
 	"crypto-user/api"
@@ -8,6 +9,7 @@ import (
 
 	"gopkg.in/mgo.v2/bson"
 
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,22 +23,18 @@ func SetKeyUserHandler(c *gin.Context) {
 		return
 	}
 
+	claims := jwt.ExtractClaims(c)
+	
 	var user User
-	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"tel": user_request.Tel}, nil, &user); err != nil {
+	if err := db.FindOneById(db.DB, db.CollectionUser, claims["uid"], &user); err != nil {
 		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
-		return
-	}
-
-	// if password error
-	if !checkPassword(user_request.Password, user.Password, user.Salt) {
-		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user password incorrect", Payload: nil})
 		return
 	}
 
 	user.OkexKey = user_request.OkexKey
 	user.HuobiKey = user_request.HuobiKey
 
-	if err := db.Update(db.DB, db.CollectionUser, bson.M{"tel": user_request.Tel}, &user); err == nil {
+	if err := db.Update(db.DB, db.CollectionUser, bson.M{"_id": claims["uid"]}, &user); err == nil {
 		c.JSON(http.StatusOK, api.JSONReply{ErrorCode: 0, ErrorDescription: "success", Payload: nil})
 	} else {
 		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "update job status err", Payload: nil})
