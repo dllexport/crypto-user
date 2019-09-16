@@ -12,7 +12,6 @@ import (
 
 	jwt_gin "github.com/appleboy/gin-jwt/v2"
 	"github.com/dgrijalva/jwt-go"
-	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +24,7 @@ func RefreshTokenHandler(c *gin.Context) {
 	claims := jwt_gin.ExtractClaims(c)
 
 	var user User
-	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"_id": claims["uid"]}, nil, &user); err != nil {
+	if err := db.FindOneById(db.DB, db.CollectionUser, claims["uid"], &user); err != nil {
 		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
 		return
 	}

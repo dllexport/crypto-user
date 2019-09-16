@@ -1,7 +1,6 @@
 package user_api
 
 import (
-	"fmt"
 	"net/http"
 
 	"crypto-user/api"
@@ -24,7 +23,7 @@ func SetKeyUserHandler(c *gin.Context) {
 	}
 
 	claims := jwt.ExtractClaims(c)
-	
+
 	var user User
 	if err := db.FindOneById(db.DB, db.CollectionUser, claims["uid"], &user); err != nil {
 		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
