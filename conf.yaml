@@ -11,7 +11,7 @@ gin:
   mode: debug
 
 api:
-  port: 5005
+  port: 5000
 
 jwt:
   secret: 12fadzc132f423dsc21424123412343124fdsacv321
