@@ -3,6 +3,7 @@ package main
 import (
 	"runtime"
 
+	"crypto-user/api/account_api"
 	"crypto-user/api/middleware"
 	"crypto-user/api/user_api"
 	"crypto-user/utils"
@@ -24,6 +25,7 @@ func main() {
 	userGroup.POST("/create", user_api.CreateUserHandler)
 	userGroup.POST("/delete", user_api.DeleteUserHandler)
 	userGroup.POST("/login", user_api.LoginUserHandler)
+	userGroup.POST("/wallet", account_api.GetWalletHandler)
 	userGroup.Use(middleware.JwtMiddleware().MiddlewareFunc())
 	{
 		userGroup.POST("/setkey", user_api.SetKeyUserHandler)
