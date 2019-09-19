@@ -45,8 +45,8 @@ func SetKeyUserHandler(c *gin.Context) {
 	if user_request.HuobiKey.SecretKey != "" {
 		user.HuobiKey.SecretKey = user_request.HuobiKey.SecretKey
 	}
-	if user_request.PushURL != "" {
-		user.PushURL = user_request.PushURL
+	if user_request.PushUID != 0 {
+		user.PushUID = user_request.PushUID
 	}
 
 	if err := db.Update(db.DB, db.CollectionUser, bson.M{"username": claims["username"].(string)}, &user); err == nil {

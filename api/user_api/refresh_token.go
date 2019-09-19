@@ -3,7 +3,6 @@ package user_api
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"crypto-user/api"
@@ -11,31 +10,23 @@ import (
 
 	"crypto-user/db"
 
+	jwt_gin "github.com/appleboy/gin-jwt/v2"
+	"github.com/dgrijalva/jwt-go"
 	"gopkg.in/mgo.v2/bson"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
 /**
 启动作业
 */
-func LoginUserHandler(c *gin.Context) {
-	var user_request LoginUserRequest
-	if err := c.ShouldBindJSON(&user_request); err != nil {
-		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "parms err", Payload: nil})
-		return
-	}
+func RefreshTokenHandler(c *gin.Context) {
+
+	claims := jwt_gin.ExtractClaims(c)
 
 	var user User
-	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"username": user_request.Username}, nil, &user); err != nil {
+	if err := db.FindOne(db.DB, db.CollectionUser, bson.M{"_id": claims["uid"]}, nil, &user); err != nil {
 		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user not found", Payload: nil})
-		return
-	}
-
-	// if password error
-	if !checkPassword(user_request.Password, user.Password, user.Salt) {
-		c.JSON(http.StatusBadRequest, api.JSONReply{ErrorCode: -1, ErrorDescription: "user password incorrect", Payload: nil})
 		return
 	}
 
@@ -70,19 +61,4 @@ func LoginUserHandler(c *gin.Context) {
 		Token: tokenString,
 	}})
 
-}
-
-func genStar(len int) string {
-	return strings.Repeat("•", len)
-}
-
-func maskRight(s string, length int) string {
-	if length > 0 {
-		rs := []rune(s)
-		for i := len(rs) - 1; i >= length; i-- {
-			rs[i] = '•'
-		}
-		return string(rs)
-	}
-	return ""
 }

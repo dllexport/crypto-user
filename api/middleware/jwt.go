@@ -22,7 +22,7 @@ func JwtMiddleware() *jwt.GinJWTMiddleware {
 
 	// the jwt middleware
 	middleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:      "hedge",
+		Realm:      "user",
 		Key:        []byte(secretKey),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
