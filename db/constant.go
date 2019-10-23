@@ -3,7 +3,7 @@ package db
 import "crypto-user/utils"
 
 var (
-	DB             = "crypto"
+	DB             = "tradedb"
 	CollectionUser = "user"
 )
 

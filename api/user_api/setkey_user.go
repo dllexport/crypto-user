@@ -32,6 +32,7 @@ func SetKeyUserHandler(c *gin.Context) {
 
 	user.OkexKey = user_request.OkexKey
 	user.HuobiKey = user_request.HuobiKey
+	user.PushURL = user_request.PushURL
 
 	if err := db.Update(db.DB, db.CollectionUser, bson.M{"_id": claims["uid"]}, &user); err == nil {
 		c.JSON(http.StatusOK, api.JSONReply{ErrorCode: 0, ErrorDescription: "success", Payload: nil})

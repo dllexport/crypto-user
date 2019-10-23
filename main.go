@@ -28,6 +28,7 @@ func main() {
 	userGroup.POST("/setpush", user_api.SetPushURLUserHandler)
 	userGroup.Use(middleware.JwtMiddleware().MiddlewareFunc())
 	{
+		userGroup.POST("/getkey", user_api.GetKeyUserHandler)
 		userGroup.POST("/setkey", user_api.SetKeyUserHandler)
 		userGroup.POST("/refresh", user_api.RefreshTokenHandler)
 	}
